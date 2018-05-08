@@ -9,6 +9,7 @@
   "author": "SanGy",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^3.0.3",
     "lodash": "^4.17.10",
     "yargs": "^11.0.0"
   }

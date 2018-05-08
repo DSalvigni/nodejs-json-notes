@@ -16,16 +16,12 @@ const notes = require('./notes.js');
 
 
 
+//Arg vector collect the prompt arguments
 const argv = yargs.argv;
+//I need to isolate the value to pass my function
 var command = argv._[0];
-//var command = process.argv[2];
-//var command = argv._[2];
-
+//I print the command provided
 console.log('-> command:',command);
-//console.log('Yargs:',argv);
-//console.log('Titolo:',argv.title);
-//console.log('Body:',argv.body);
-
 
 if(command ==='add'){
     notes.addNote(argv.title,argv.body);
