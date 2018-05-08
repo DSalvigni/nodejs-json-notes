@@ -1,3 +1,12 @@
+/* 
+* Simple program to manage a JSON notes repository based on nodeJS
+* It is a command line yargs tool, with simple sintax:
+* - add a note: "C:\node app.js add --title='....' --body='...'" 
+* - get a note: "C:\node app.js add --title='....' "
+* - get all notes: "C:\node app.js list "
+* - remove all notes: "C:\node app.js remove --title='...' "
+*/
+
 console.log('-> Starting the App...');
 
 const fs = require('fs');
