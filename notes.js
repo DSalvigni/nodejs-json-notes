@@ -11,6 +11,20 @@ var saveNotes = (note) => {
     fs.writeFileSync(jsonFile,JSON.stringify(note));
 }
 
+var readJson = (jsonFile) => {
+    try {
+        var originalJson = fs.readFileSync(jsonFile);
+        //I parse the TXT in a JSON Obj
+        var notes = JSON.parse(originalJson);    
+        return notes;
+    } catch (e) {
+        console.log('JSON files does´t exist. JASON File created from scratch');
+    }
+};
+
+
+
+
 //ADD Note Function
 var addNote = (title,body) => {
     //I create an empty array to fill with the Json:
@@ -24,13 +38,7 @@ var addNote = (title,body) => {
     };
 
     //We try to open the JSON files
-    try {
-        var originalJson = fs.readFileSync(jsonFile);
-        //I parse the TXT in a JSON Obj
-        var notes = JSON.parse(originalJson);    
-    } catch (e) {
-        console.log('JSON files does´t exist. JASON File created from scratch');
-    }
+    var notes = readJson(jsonFile);
 
     //Check the duplicate based on the title
     var duplicateNotes = notes.filter((item) => item.title===title);
@@ -42,7 +50,7 @@ var addNote = (title,body) => {
         //Save the note
         saveNotes(notes);
         //I print out the added note
-        console.log('Added the note: '+newNote);
+        console.log('Added the note: Title-> '+JSON.stringify(newNote));
     }else{
         //If duplicates found, I return the  alert
         console.log('Found already -> '+duplicateNotes.length+' with the tile -> '+title);
@@ -61,7 +69,7 @@ var fetchNotes = function(err){
         var results = JSON.parse(fs.readFileSync(jsonFile));
         results.forEach(function(item) {
             n++;
-            console.log('My Note in JSON file-> '+n+') Title:'+item.title+' - Dody:'+item.body+' - Created at: '+item.day);
+            console.log('My Note in JSON file-> '+n+') Title:'+item.title+' - Body:'+item.body+' - Created at: '+item.day);
         });
     } catch (e) {
         console.log('JSON files does´t exist or it is empty!');
@@ -69,9 +77,20 @@ var fetchNotes = function(err){
 };
 
 //Remove a note
-var removeNote = function(title,err){
-    if(err) throw err;
-    console.log('Remove -> ');
+var removeNote = (title) => {
+    console.log('Try to remove note with Title = '+title);
+    var notes = readJson(jsonFile);    
+    var foundNotes = notes.filter((item) => item.title===title);
+    if(foundNotes.length === 0){
+        console.log('No notes found to be removed');
+    }else{
+        finalNotes = notes.filter((item) => item.title!=title);
+        console.log(finalNotes);
+        saveNotes(finalNotes);
+        console.log('Note Removed!');
+    }
+   
+
 };
 
 //Read one note/notes based on title
