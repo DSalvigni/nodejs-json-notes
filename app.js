@@ -22,13 +22,12 @@ const argv = yargs.argv;
 var command = argv._[0];
 //I print the command provided
 console.log('-> command:',command);
-
 if(command ==='add'){
     notes.addNote(argv.title,argv.body);
 } else if(command ==='list'){
-    notes.getAll();
+    notes.fetchNotes();
 } else if(command ==='get'){
-    notes.readNote(argv.title);
+    notes.fetchNote(argv.title);
 } else if(command ==='remove'){
     notes.removeNote(argv.title);
 } else{

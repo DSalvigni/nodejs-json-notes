@@ -2,15 +2,22 @@ console.log('-> Starting notes.js');
 const fs = require('fs');
 const dateFormat = require('dateformat');
 
+//We define a variable to catch the current date
+var day = dateFormat(new Date(), "yyyy-mm-dd h:MM:ss");
+var jsonFile = 'notes.JSON';
 
-var day=dateFormat(new Date(), "yyyy-mm-dd h:MM:ss");
 
-var addNote = function(title,body,err){
-    if(err) throw err;
-    //I create the empty array to fill with the Json:
+var saveNotes = (note) => {
+    fs.writeFileSync(jsonFile,JSON.stringify(note));
+}
+
+//ADD Note Function
+var addNote = (title,body) => {
+    //I create an empty array to fill with the Json:
     var notes = [];
-    //I open the original JSON file
-    newNote = {
+
+    //I format a variable to show what I have inserted
+    var newNote = {
         title: title,
         body: body,
         day: day
@@ -18,49 +25,57 @@ var addNote = function(title,body,err){
 
     //We try to open the JSON files
     try {
-        var originalJson = fs.readFileSync('notes.JSON');
+        var originalJson = fs.readFileSync(jsonFile);
         //I parse the TXT in a JSON Obj
         var notes = JSON.parse(originalJson);    
     } catch (e) {
         console.log('JSON files does´t exist. JASON File created from scratch');
     }
 
-    //Check the duplicate...
+    //Check the duplicate based on the title
     var duplicateNotes = notes.filter((item) => item.title===title);
 
-    //I load the new data from the command line and add the new note in the JSON Obj
-
+    //If i do not find note with the given title
     if(duplicateNotes.length === 0){
+        //If not duplicates found, I push the note in the array
         notes.push(newNote);
-        //COnvert the OBJ to string and I write the string in the file
-        fs.writeFileSync('notes.JSON',JSON.stringify(notes));
-        //I print out the JSON with parse
-        //console.log('------------->START<-----------------');
-        console.log('Added the note:',newNote);
-        //console.log('-------------->END<------------------');  
+        //Save the note
+        saveNotes(notes);
+        //I print out the added note
+        console.log('Added the note: '+newNote);
     }else{
+        //If duplicates found, I return the  alert
         console.log('Found already -> '+duplicateNotes.length+' with the tile -> '+title);
         console.log('Note will be not inserted because duplicated!');  
     }
    
 };
 
-var getAll = function(err){
+//Read all notes function
+var fetchNotes = function(err){
     if(err) throw err;
+    var results = [];
+    var n=0;
     console.log('List of all:');
-    var notesString = fs.readFileSync('notes.JSON');
-    console.log('My Note file (JSON):',JSON.parse(notesString));
+    try {
+        var results = JSON.parse(fs.readFileSync(jsonFile));
+        results.forEach(function(item) {
+            n++;
+            console.log('My Note in JSON file-> '+n+') Title:'+item.title+' - Dody:'+item.body+' - Created at: '+item.day);
+        });
+    } catch (e) {
+        console.log('JSON files does´t exist or it is empty!');
+    }
 };
 
-
+//Remove a note
 var removeNote = function(title,err){
-
-
     if(err) throw err;
     console.log('Remove -> ');
 };
 
-var readNote = function(title,err){
+//Read one note/notes based on title
+var fetchNote = function(title,err){
     if(err) throw err;
     //We try to open the JSON files
     try {
@@ -89,7 +104,7 @@ var readNote = function(title,err){
 
 module.exports = {
     addNote,
-    getAll,
+    fetchNotes,
     removeNote,
-    readNote
+    fetchNote
 };
