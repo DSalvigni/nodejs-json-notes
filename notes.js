@@ -84,7 +84,7 @@ var removeNote = (title) => {
     if(foundNotes.length === 0){
         console.log('No notes found to be removed');
     }else{
-        finalNotes = notes.filter((item) => item.title!=title);
+        finalNotes = notes.filter((item) => item.title!==title);
         console.log(finalNotes);
         saveNotes(finalNotes);
         console.log('Note Removed!');
